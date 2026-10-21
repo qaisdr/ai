@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>أنا | مساعدك الشخصي الذكي</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <!-- Puter.js for real AI image & video generation (no developer API key needed) -->
+    <script src="https://js.puter.com/v2/"></script>
+</head>
+<body>
+    <div class="app">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo">
+                <div class="logo-icon">أنا</div>
+                <span class="logo-text">المساعد الشخصي</span>
+            </div>
+            
+            <button class="new-chat-btn" onclick="startNewChat()">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+                محادثة جديدة
+            </button>
+
+            <div class="nav-tabs">
+                <button class="nav-tab active" onclick="setMode('chat')">💬 المحادثة</button>
+                <button class="nav-tab" onclick="setMode('image')">🖼️ إنشاء صورة</button>
+                <button class="nav-tab" onclick="setMode('video')">🎬 إنشاء فيديو</button>
+            </div>
+
+            <div class="quick-actions">
+                <h3>إجراءات سريعة</h3>
+                <button class="action-btn" onclick="sendQuick('لخص لي النص التالي:')">📝 تلخيص نص</button>
+                <button class="action-btn" onclick="sendQuick('اكتب لي رسالة احترافية عن:')">✉️ كتابة رسالة</button>
+                <button class="action-btn" onclick="sendQuick('أعطني أفكار إبداعية عن:')">💡 أفكار إبداعية</button>
+                <button class="action-btn" onclick="sendQuick('ترجم إلى الإنجليزية:')">🌐 ترجمة</button>
+                <button class="action-btn" onclick="sendQuick('خطط لي يومي:')">📅 تخطيط اليوم</button>
+                <button class="action-btn" onclick="sendQuick('نصيحة شخصية:')">🎯 نصيحة شخصية</button>
+            </div>
+
+            <div class="sidebar-footer">
+                <div class="user-info">
+                    <div class="avatar">أ</div>
+                    <div>
+                        <div class="user-name">أنت</div>
+                        <div class="user-status">متصل</div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Chat Area -->
+        <main class="chat-area">
+            <header class="chat-header">
+                <div class="header-info">
+                    <div class="assistant-avatar">أنا</div>
+                    <div>
+                        <h1>أنا</h1>
+                        <p class="status"><span class="dot"></span> جاهز لمساعدتك</p>
+                    </div>
+                </div>
+                <div class="header-actions">
+                    <button class="icon-btn" onclick="toggleTheme()" title="تبديل المظهر">🌓</button>
+                </div>
+            </header>
+
+            <div class="messages" id="messages">
+                <div class="welcome">
+                    <div class="welcome-icon">أنا</div>
+                    <h2>مرحباً بك</h2>
+                    <p>أنا مساعدك الشخصي الذكي. أقدر أرد عليك <strong>بذكاء اصطناعي حقيقي</strong>، وأنشئ صور وفيديوهات حقيقية.</p>
+                    <div class="suggestions">
+                        <button onclick="sendQuick('كيف أبدأ يومي بشكل منتج؟')">كيف أبدأ يومي بشكل منتج؟</button>
+                        <button onclick="setMode('image'); document.getElementById('userInput').focus();">أنشئ لي صورة 🖼️</button>
+                        <button onclick="setMode('video'); document.getElementById('userInput').focus();">أنشئ لي فيديو 🎬</button>
+                        <button onclick="sendQuick('اكتب لي قائمة مهام')">اكتب لي قائمة مهام</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="input-area">
+                <div class="mode-selector">
+                    <button class="mode-btn active" data-mode="chat" onclick="setMode('chat')">💬 محادثة</button>
+                    <button class="mode-btn" data-mode="image" onclick="setMode('image')">🖼️ صورة</button>
+                    <button class="mode-btn" data-mode="video" onclick="setMode('video')">🎬 فيديو</button>
+                </div>
+                <div class="input-wrapper">
+                    <textarea 
+                        id="userInput" 
+                        placeholder="اكتب رسالتك هنا..." 
+                        rows="1"
+                        onkeydown="handleKey(event)"
+                    ></textarea>
+                    <button class="send-btn" onclick="sendMessage()" id="sendBtn">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="22" y1="2" x2="11" y2="13"></line>
+                            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                        </svg>
+                    </button>
+                </div>
+                <p class="disclaimer">أنا • ذكاء اصطناعي حقيقي + صور + فيديوهات • قد يطلب تسجيل دخول مجاني لـ Puter</p>
+            </div>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
