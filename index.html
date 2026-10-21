@@ -2,20 +2,23 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>أنا | مساعدك الشخصي الذكي</title>
     <link rel="stylesheet" href="styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <!-- Puter.js for real AI image & video generation (no developer API key needed) -->
     <script src="https://js.puter.com/v2/"></script>
 </head>
 <body>
     <div class="app">
+        <!-- Mobile overlay -->
+        <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+
         <!-- Sidebar -->
-        <aside class="sidebar">
+        <aside class="sidebar" id="sidebar">
             <div class="logo">
                 <div class="logo-icon">أنا</div>
                 <span class="logo-text">المساعد الشخصي</span>
+                <button class="close-sidebar" onclick="closeSidebar()">✕</button>
             </div>
             
             <button class="new-chat-btn" onclick="startNewChat()">
@@ -32,14 +35,15 @@
                 <button class="nav-tab" onclick="setMode('video')">🎬 إنشاء فيديو</button>
             </div>
 
-            <div class="quick-actions">
-                <h3>إجراءات سريعة</h3>
-                <button class="action-btn" onclick="sendQuick('لخص لي النص التالي:')">📝 تلخيص نص</button>
-                <button class="action-btn" onclick="sendQuick('اكتب لي رسالة احترافية عن:')">✉️ كتابة رسالة</button>
-                <button class="action-btn" onclick="sendQuick('أعطني أفكار إبداعية عن:')">💡 أفكار إبداعية</button>
-                <button class="action-btn" onclick="sendQuick('ترجم إلى الإنجليزية:')">🌐 ترجمة</button>
-                <button class="action-btn" onclick="sendQuick('خطط لي يومي:')">📅 تخطيط اليوم</button>
-                <button class="action-btn" onclick="sendQuick('نصيحة شخصية:')">🎯 نصيحة شخصية</button>
+            <!-- Chat History -->
+            <div class="history-section">
+                <div class="history-header">
+                    <h3>سجل المحادثات</h3>
+                    <button class="clear-history-btn" onclick="clearAllHistory()" title="مسح الكل">🗑️</button>
+                </div>
+                <div class="history-list" id="historyList">
+                    <!-- filled by JS -->
+                </div>
             </div>
 
             <div class="sidebar-footer">
@@ -56,15 +60,18 @@
         <!-- Main Chat Area -->
         <main class="chat-area">
             <header class="chat-header">
-                <div class="header-info">
-                    <div class="assistant-avatar">أنا</div>
-                    <div>
-                        <h1>أنا</h1>
-                        <p class="status"><span class="dot"></span> جاهز لمساعدتك</p>
+                <div class="header-left">
+                    <button class="menu-btn" onclick="openSidebar()">☰</button>
+                    <div class="header-info">
+                        <div class="assistant-avatar">أنا</div>
+                        <div>
+                            <h1>أنا</h1>
+                            <p class="status"><span class="dot"></span> جاهز لمساعدتك</p>
+                        </div>
                     </div>
                 </div>
                 <div class="header-actions">
-                    <button class="icon-btn" onclick="toggleTheme()" title="تبديل المظهر">🌓</button>
+                    <button class="icon-btn" onclick="toggleTheme()" title="تبديل المظهر" id="themeBtn">🌙</button>
                 </div>
             </header>
 
@@ -72,12 +79,13 @@
                 <div class="welcome">
                     <div class="welcome-icon">أنا</div>
                     <h2>مرحباً بك</h2>
-                    <p>أنا مساعدك الشخصي الذكي. أقدر أرد عليك <strong>بذكاء اصطناعي حقيقي</strong>، وأنشئ صور وفيديوهات حقيقية.</p>
+                    <p>أنا مساعدك الشخصي الذكي الحقيقي.<br>
+                    أقدر أرد عليك نصياً أو <strong>بالفيديو</strong> أو <strong>بالصوت</strong>.</p>
                     <div class="suggestions">
                         <button onclick="sendQuick('كيف أبدأ يومي بشكل منتج؟')">كيف أبدأ يومي بشكل منتج؟</button>
-                        <button onclick="setMode('image'); document.getElementById('userInput').focus();">أنشئ لي صورة 🖼️</button>
-                        <button onclick="setMode('video'); document.getElementById('userInput').focus();">أنشئ لي فيديو 🎬</button>
-                        <button onclick="sendQuick('اكتب لي قائمة مهام')">اكتب لي قائمة مهام</button>
+                        <button onclick="sendQuick('رد بالفيديو: اشرح لي كيف أكون منتج')">رد بالفيديو 🎬</button>
+                        <button onclick="setMode('image'); document.getElementById('userInput').focus();">أنشئ لي صورة</button>
+                        <button onclick="setMode('video'); document.getElementById('userInput').focus();">أنشئ لي فيديو</button>
                     </div>
                 </div>
             </div>
@@ -91,7 +99,7 @@
                 <div class="input-wrapper">
                     <textarea 
                         id="userInput" 
-                        placeholder="اكتب رسالتك هنا..." 
+                        placeholder="اكتب رسالتك... أو قل رد بالفيديو"
                         rows="1"
                         onkeydown="handleKey(event)"
                     ></textarea>
@@ -102,7 +110,7 @@
                         </svg>
                     </button>
                 </div>
-                <p class="disclaimer">أنا • ذكاء اصطناعي حقيقي + صور + فيديوهات • قد يطلب تسجيل دخول مجاني لـ Puter</p>
+                <p class="disclaimer">أنا • ذكاء اصطناعي حقيقي • صوت + فيديو + صور • سجل محفوظ محلياً</p>
             </div>
         </main>
     </div>
