@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>QAIXEN | Artificial Intelligence</title>
+    <meta name="description" content="QAIXEN — Artificial Intelligence for a Better Tomorrow">
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=Montserrat:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="icon" href="logo-app.svg" type="image/svg+xml">
+    <script src="https://js.puter.com/v2/"></script>
+</head>
+<body>
+    <div class="fx" aria-hidden="true"></div>
+    <div class="app">
+        <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+
+        <aside class="sidebar" id="sidebar">
+            <div class="brand">
+                <img src="logo-app.svg" class="brand-logo" alt="QAIXEN" width="48" height="48">
+                <div>
+                    <div class="brand-name">QAIXEN</div>
+                    <div class="brand-tag">ARTIFICIAL INTELLIGENCE</div>
+                </div>
+                <button class="icon-btn close-sidebar" onclick="closeSidebar()" aria-label="إغلاق">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+                </button>
+            </div>
+
+            <button class="btn-glow full" onclick="startNewChat()">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 5v14M5 12h14"/></svg>
+                محادثة جديدة
+            </button>
+
+            <div class="sec-label">الأدوات</div>
+            <nav class="nav">
+                <button class="nav-item active" data-mode="chat" onclick="setMode('chat')">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+                    المحادثة
+                </button>
+                <button class="nav-item" data-mode="image" onclick="setMode('image')">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+                    إنشاء صورة
+                </button>
+                <button class="nav-item" data-mode="video" onclick="setMode('video')">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="2" y="4" width="15" height="16" rx="2"/><path d="M17 8l5-3v14l-5-3"/></svg>
+                    إنشاء فيديو
+                </button>
+            </nav>
+
+            <div class="panel">
+                <div class="panel-h">
+                    <span>السجل</span>
+                    <button class="link-btn" onclick="clearAllHistory()">مسح</button>
+                </div>
+                <div class="history-list" id="historyList"></div>
+            </div>
+
+            <div class="panel panel-sm">
+                <div class="panel-h">
+                    <span>المهام</span>
+                    <button class="link-btn" onclick="addTaskPrompt()">إضافة</button>
+                </div>
+                <div id="tasksList"></div>
+            </div>
+
+            <div class="account">
+                <div class="avatar" id="userAvatar">أ</div>
+                <div>
+                    <div class="account-name" id="userNameDisplay">أنت</div>
+                    <div class="account-status">متصل</div>
+                </div>
+            </div>
+        </aside>
+
+        <main class="main">
+            <header class="topbar">
+                <div class="topbar-r">
+                    <button class="icon-btn menu-btn" onclick="openSidebar()">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+                    </button>
+                    <img src="logo-app.svg" class="top-logo" alt="QAIXEN" width="36" height="36">
+                    <div>
+                        <div class="top-title">QAIXEN</div>
+                        <div class="top-status"><span class="dot"></span> <span id="statusText">جاهز للمساعدة</span></div>
+                    </div>
+                </div>
+                <div class="topbar-l">
+                    <button class="icon-btn" onclick="exportChat()" title="تصدير">
+                        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+                    </button>
+                    <button class="icon-btn" onclick="toggleTheme()" id="themeBtn" title="المظهر">
+                        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 12.8A9 9 0 1111.2 3 7 7 0 0021 12.8z"/></svg>
+                    </button>
+                </div>
+            </header>
+
+            <div class="messages" id="messages"></div>
+
+            <footer class="composer">
+                <div class="modes">
+                    <button class="chip active" data-mode="chat" onclick="setMode('chat')">محادثة</button>
+                    <button class="chip" data-mode="image" onclick="setMode('image')">صورة</button>
+                    <button class="chip" data-mode="video" onclick="setMode('video')">فيديو</button>
+                    <label class="chip">رفع صورة<input type="file" id="fileInput" accept="image/*" hidden onchange="handleFileUpload(event)"></label>
+                </div>
+                <div class="input-row">
+                    <button class="mic-btn" id="micBtn" onclick="toggleVoiceInput()" title="صوت">
+                        <svg class="mic-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                            <path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/>
+                            <path d="M19 10v2a7 7 0 01-14 0v-2M12 19v4M8 23h8"/>
+                        </svg>
+                        <span class="mic-waves"><i></i><i></i><i></i></span>
+                    </button>
+                    <textarea id="userInput" rows="1" placeholder="اكتب أو تحدّث إلى QAIXEN..." onkeydown="handleKey(event)"></textarea>
+                    <button class="send-btn" id="sendBtn" onclick="sendMessage()">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3">
+                            <line x1="22" y1="2" x2="11" y2="13"></line>
+                            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                        </svg>
+                    </button>
+                </div>
+                <div class="voice-status" id="voiceStatus" hidden>
+                    <span class="voice-pulse"></span>
+                    <span id="voiceStatusText">جارٍ الاستماع...</span>
+                    <button type="button" class="voice-cancel" onclick="stopVoiceInput()">إيقاف</button>
+                </div>
+                <p class="foot-note">QAIXEN — Artificial Intelligence for a Better Tomorrow</p>
+            </footer>
+        </main>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
